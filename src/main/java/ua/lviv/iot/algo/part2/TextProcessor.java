@@ -1,31 +1,18 @@
 package ua.lviv.iot.algo.part2;
 
 public class TextProcessor {
-    public TextProcessor() {}
+    public TextProcessor(String text) {
+        this.text = text;
+    }
 
     public String getText() {
         return text;
     }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String[] getSplitSentences() {
-        return splitSentences;
-    }
-
-    public void setSplitSentences(String[] splitSentences) {
-        this.splitSentences = splitSentences;
-    }
-
-    private String text = "I just purchased a state-of-the-art, top-of-the-line computer for my home office!"
-            + "You are doing an amazing job at work!"
-            + "My ex-girlfriend's new boyfriend is a know-it-all!"
-            + "The sunsets on this beach are breathtaking!"
-            + "Congratulations on your graduation!";
-    private static final String REG_EX = ".*\\S-\\S.*\\S-\\S.*\\S-\\S.*!$";
+    private String text;
+    private static final String threeHyphensInASentence = ".*\\S-\\S.*\\S-\\S.*\\S-\\S.*!$";
+    private static final String sentenceSeparation = "(?<=[.?!])";
     private String[] splitSentences;
+    StringBuffer string = new StringBuffer();
 
     public void printAndDeleteFromText() {
         splitSentences();
@@ -33,24 +20,19 @@ public class TextProcessor {
         removeSentencesMatchingRegex();
 
         for (String sentence : splitSentences) {
-            text = text + sentence;
+            string.append(sentence);
         }
+        text = string.toString();
         System.out.println(text);
     }
 
     private void splitSentences() {
-        splitSentences = text.split("(?<=[.?!])");
+        splitSentences = text.split(sentenceSeparation);
     }
 
     protected void removeSentencesMatchingRegex() {
         for (int i = 0; i < splitSentences.length; i++) {
-            splitSentences[i] = splitSentences[i].replaceAll(REG_EX, "");
+            splitSentences[i] = splitSentences[i].replaceAll(threeHyphensInASentence, "");
         }
-        text = "";
-    }
-
-    public static void main(String[] args) {
-        TextProcessor obj = new TextProcessor();
-        obj.printAndDeleteFromText();
     }
 }
